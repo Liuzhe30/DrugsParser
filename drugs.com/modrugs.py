@@ -367,7 +367,7 @@ while True:
                 
                 # tips page
                 if links['tips'] is not None:
-                    r = requests.get(url(links['inter']['href']))
+                    r = requests.get(url(links['tips']['href']))
                     soup = bs4.BeautifulSoup(r.content, 'lxml') 
                     #print(soup)
                     with open(f'data/{drug}/{drug}_tips.json', 'w') as f:
