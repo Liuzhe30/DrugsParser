@@ -35,7 +35,7 @@ for li in drug_page.find_all('li'):
         drug_dict[unit_list[1]] = {}
         
         for idx in range(2, len(unit_list)):
-            if(idx >= 26):
+            if(unit_list[idx] == 'CYP interactions'):
                 break
             if(idx % 2 == 0):
                 drug_dict[unit_list[1]][unit_list[idx].replace('\n', ' ')] = unit_list[idx + 1].split('\n')
