@@ -26,27 +26,28 @@ for li in drug_page.find_all('li'):
         table = content_page.find('table', attrs={"width": "90%"})
         #print(table)
         
-        for tr in table.find_all('tr'):
-            num = 0
-            for td in tr.find_all('td'):
-                br = str(td).replace('<br/>', '\n')
-                unit_list.append(re.sub(u"\\<.*?\\>", " ", br).strip())
-        #print(unit_list)
-        drug_dict[unit_list[1]] = {}
-        
-        for idx in range(2, len(unit_list)):
-            if(unit_list[idx] == 'CYP interactions'):
-                break
-            if(idx % 2 == 0):
-                drug_dict[unit_list[1]][unit_list[idx].replace('\n', ' ')] = unit_list[idx + 1].split('\n')
-            idx += 2
+        try:
+            for tr in table.find_all('tr'):
+                num = 0
+                for td in tr.find_all('td'):
+                    br = str(td).replace('<br/>', '\n')
+                    unit_list.append(re.sub(u"\\<.*?\\>", " ", br).strip())
+            #print(unit_list)
+            drug_dict[unit_list[1]] = {}
             
-        print(unit_list[1])
-        
-        with open('drug_json/' + str(unit_list[1]) + '.json', 'w') as f:
-            json.dump(drug_dict, f, indent=5)
+            for idx in range(2, len(unit_list)):
+                if(unit_list[idx] == 'CYP interactions'):
+                    break
+                if(idx % 2 == 0):
+                    drug_dict[unit_list[1]][unit_list[idx].replace('\n', ' ')] = unit_list[idx + 1].split('\n')
+                idx += 2
+                
+            print(unit_list[1])
             
-            
+            with open('drug_json/' + str(unit_list[1]) + '.json', 'w') as f:
+                json.dump(drug_dict, f, indent=5)
+        except AttributeError:
+                continue
         #break
     except TypeError:
         continue
