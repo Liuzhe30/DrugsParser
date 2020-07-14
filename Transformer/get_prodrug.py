@@ -49,7 +49,7 @@ for li in drug_page.find_all('li'):
             with open('prodrug_json/' + str(new_list[1]) + '.json', 'w') as f:
                 json.dump(drug_dict, f, indent=5)
                 
-        except (AttributeError, FileNotFoundError):
+        except (AttributeError, FileNotFoundError, IndexError):
             continue
                 
         #break
