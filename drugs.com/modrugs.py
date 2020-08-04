@@ -45,66 +45,47 @@ def extract_inter(soup):
             if category == 'Drug Interactions':
                 for li in inter_page.find('ul', 'interactions interactions-label ddc-list-unstyled').find_all('li'):
                     inter[category]['content'].append(txt(li).replace('\t', ''))
-                    
+                #print(link[:-5] + '-index' + link[-5:])    
                 full_list_page = bs4.BeautifulSoup(requests.get(url(link[:-5] + '-index' + link[-5:])).content, 'lxml')
+                for line in str(full_list_page).split('\n'):
+
+                    if('int_0' in line and 'drug-interactions' in line):
+                        
+                        link_comment = line.split('"')[3]
+                        
+                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
+                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
+                        comment = re.sub(u"\\<.*?\\>", "", comment)
+                        drug_name = re.sub(u"\\<.*?\\>", "", line)
+                        
+                        inter[category]['inter_list'].append([0,drug_name, comment])   
+                    elif('int_1' in line and 'drug-interactions' in line):
+                        
+                        link_comment = line.split('"')[3]
+                        
+                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
+                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
+                        comment = re.sub(u"\\<.*?\\>", "", comment)
+                        drug_name = re.sub(u"\\<.*?\\>", "", line)
+                        
+                        inter[category]['inter_list'].append([1,drug_name, comment])  
+                    elif('int_2' in line and 'drug-interactions' in line):
+                        link_comment = line.split('"')[3]
+                        
+                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
+                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
+                        comment = re.sub(u"\\<.*?\\>", "", comment)
+                        drug_name = re.sub(u"\\<.*?\\>", "", line)
+                        inter[category]['inter_list'].append([2,drug_name, comment])    
+                    elif('int_3' in line and 'drug-interactions' in line):
+                        link_comment = line.split('"')[3]
+                        
+                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
+                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
+                        comment = re.sub(u"\\<.*?\\>", "", comment)
+                        drug_name = re.sub(u"\\<.*?\\>", "", line)
+                        inter[category]['inter_list'].append([3,drug_name, comment])                      
                 
-                if(full_list_page.find('ul', 'interactions ddc-list-unstyled') is not None):
-                    for li in full_list_page.find('ul', 'interactions ddc-list-unstyled').find_all('li','int_0'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([0,txt(li).replace('\t', ''), comment])
-                            
-                    for li in full_list_page.find('ul', 'interactions ddc-list-unstyled').find_all('li','int_1'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([1,txt(li).replace('\t', ''), comment])   
-                        
-                    for li in full_list_page.find('ul', 'interactions ddc-list-unstyled').find_all('li','int_2'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([2,txt(li).replace('\t', ''), comment])
-                        
-                    for li in full_list_page.find('ul', 'interactions ddc-list-unstyled').find_all('li','int_3'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([3,txt(li).replace('\t', ''), comment])
-                        
-                elif(full_list_page.find('ul', 'interactions column-list-3') is not None):
-                    for li in full_list_page.find('ul', 'interactions column-list-3').find_all('li','int_0'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([0,txt(li).replace('\t', ''), comment])
-                        
-                    for li in full_list_page.find('ul', 'interactions column-list-3').find_all('li','int_1'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([1,txt(li).replace('\t', ''), comment])
-                        
-                    for li in full_list_page.find('ul', 'interactions column-list-3').find_all('li','int_2'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([2,txt(li).replace('\t', ''), comment])
-                        
-                    for li in full_list_page.find('ul', 'interactions column-list-3').find_all('li','int_3'):
-                        link_comment = li.find('a')['href']
-                        comment_page = bs4.BeautifulSoup(requests.get(url(link_comment)).content, 'lxml')
-                        comment = str(comment_page.find('div', 'interactions-reference').find_all('p')[1]).strip().replace('\t', '').replace('\n', '')
-                        comment = re.sub(u"\\<.*?\\>", "", comment)
-                        inter[category]['inter_list'].append([3,txt(li).replace('\t', ''), comment])
                 else:
                     with open('error.txt','a+') as error:
                         error.write(link + '\n')
@@ -330,6 +311,8 @@ while True:
                     #'reviews'   : soup.find('p', 'user-reviews-title').find('a')
                 }
                 #print(links)
+                
+                '''
                 # sideffects page
                 if links['sfx'] is not None:
                     r = requests.get(url(links['sfx']['href']))
@@ -355,7 +338,7 @@ while True:
                         for div in soup.find_all('div', 'Section'):
                             content.update(extract_text(div, content_box=False))
                         json.dump(content, f, indent=5)
-
+                '''
                 # interactions page
                 if links['inter'] is not None:
                     r = requests.get(url(links['inter']['href']))
@@ -364,7 +347,7 @@ while True:
                     with open(f'data/{drug}/{drug}_inter.json', 'w') as f:
                         content = extract_inter(soup)
                         json.dump(content, f, indent=4)
-                
+                '''
                 # tips page
                 if links['tips'] is not None:
                     r = requests.get(url(links['tips']['href']))
@@ -373,7 +356,7 @@ while True:
                     with open(f'data/{drug}/{drug}_tips.json', 'w') as f:
                         content = extract_text(soup)
                         json.dump(content, f, indent=4)
-                        
+                '''       
                 '''
                 # reviews 
                 if links['reviews'] is not None:
